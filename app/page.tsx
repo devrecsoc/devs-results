@@ -4,21 +4,24 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import Particles from "@/components/Particles";
+import { Toaster, ToastState } from "@/components/Toast";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [showConsent, setShowConsent] = useState(false);
   const [showEmailCard, setShowEmailCard] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
+  const [toast, setToast] = useState<ToastState>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const router = useRouter();
+  const isValidEmail = email.trim() !== "" && /\S+@\S+\.\S+/.test(email);
 
   useEffect(() => {
     const consent = sessionStorage.getItem("audioConsent");
     if (!consent) {
       setShowConsent(true);
     } else if (consent === "true") {
-      audioRef.current?.play().catch(e => console.error(e));
+      audioRef.current?.play().catch((e) => console.error(e));
     }
   }, []);
 
@@ -26,7 +29,7 @@ export default function Home() {
     sessionStorage.setItem("audioConsent", allow ? "true" : "false");
     setShowConsent(false);
     if (allow) {
-      audioRef.current?.play().catch(e => console.error(e));
+      audioRef.current?.play().catch((e) => console.error(e));
     }
   };
 
@@ -40,7 +43,10 @@ export default function Home() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (!email) return;
+      if (!isValidEmail) {
+        setToast({ message: "Please enter a valid email.", type: "error" });
+        return;
+      }
 
       // Simply pass the data to the status route. Validation happens there.
       router.push(`/status?email=${encodeURIComponent(email)}`);
@@ -49,7 +55,7 @@ export default function Home() {
 
   return (
     <div className="relative flex flex-col flex-1 items-center justify-center min-h-screen bg-black font-sans overflow-hidden">
-      
+      <Toaster toast={toast} onClose={() => setToast(null)} />
       {showConsent && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-auto">
           <div className="bg-[#576067] p-8 rounded-2xl shadow-2xl border-4 border-[#2f3133] flex flex-col items-center gap-8 max-w-sm animate-in zoom-in-95 duration-500 mx-4">
@@ -57,13 +63,13 @@ export default function Home() {
               Enable Sound Effects?
             </h2>
             <div className="flex gap-4 w-full">
-              <button 
+              <button
                 onClick={() => handleConsent(true)}
                 className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 text-white font-press-start-2p text-xs rounded-lg border-2 border-green-400 transition-colors shadow-lg active:scale-95"
               >
                 YES
               </button>
-              <button 
+              <button
                 onClick={() => handleConsent(false)}
                 className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 text-white font-press-start-2p text-xs rounded-lg border-2 border-red-400 transition-colors shadow-lg active:scale-95"
               >
@@ -85,7 +91,7 @@ export default function Home() {
           animation: subtle-shake 4s ease-in-out infinite;
         }
       `}</style>
-      
+
       {/* Particles Background */}
       <div className="absolute inset-0 w-full h-full z-0 pointer-events-auto">
         <Particles
@@ -116,8 +122,8 @@ export default function Home() {
       <audio ref={audioRef} src="/lobby.mp3" loop preload="auto" />
 
       {/* Mute Button */}
-      <button 
-        onClick={toggleMute} 
+      <button
+        onClick={toggleMute}
         className="absolute bottom-6 right-6 z-50 p-4 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xl"
         title="Toggle Sound"
       >
@@ -127,33 +133,40 @@ export default function Home() {
       {/* Toggle Check Card Button */}
       <button
         onClick={() => setShowEmailCard((prev) => !prev)}
-        className="absolute bottom-6 left-6 z-50 px-4 py-3 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xs font-press-start-2p text-white"
+        className="absolute top-[4vh] left-6 z-50 px-4 py-3 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xs font-press-start-2p text-white"
         title={showEmailCard ? "Hide Check Card" : "Show Check Card"}
       >
-                View Lobby
+        View Lobby
       </button>
 
       <main className="relative z-20 flex flex-1 w-full items-center justify-center p-4 pointer-events-none">
         {showEmailCard && (
-        <div className="flex flex-col items-center gap-4 bg-[#576067] p-8 rounded-lg shadow-lg border-4 border-[#2f3133] pointer-events-auto">
-          <h1 className="text-sm text-center font-press-start-2p font-extrabold tracking-tight text-white dark:text-zinc-100 sm:text-sm drop-shadow-md">
-            Enter your Email:
-          </h1>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="your.email@rajalakshmi.edu.in"
-            className="w-full rounded-lg border border-zinc-300 bg-black px-4 py-2 text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          /> 
-          <button 
-            onClick={() => router.push(`/status?email=${encodeURIComponent(email)}`)}
-            className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
-          >
-            Check
-          </button>
-        </div>
+          <div className="flex flex-col items-center gap-4 bg-[#576067] p-8 rounded-lg shadow-lg border-4 border-[#2f3133] pointer-events-auto">
+            <h1 className="text-sm text-center font-press-start-2p font-extrabold tracking-tight text-white dark:text-zinc-100 sm:text-sm drop-shadow-md">
+              Enter your Email:
+            </h1>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="your.email@rajalakshmi.edu.in"
+              className="w-full rounded-lg border border-zinc-300 bg-black px-4 py-2 text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              // disabled={}
+              onClick={() => {
+                if (!isValidEmail) {
+                  setToast({ message: "Please enter a valid email.", type: "error" });
+                  return;
+                }
+                router.push(`/status?email=${encodeURIComponent(email)}`);
+              }}
+              className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+            >
+              Check
+            </button>
+          </div>
         )}
       </main>
     </div>
