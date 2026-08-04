@@ -9,6 +9,7 @@ import { Toaster, ToastState } from "@/components/Toast";
 export default function Home() {
   const [email, setEmail] = useState("");
   const [showConsent, setShowConsent] = useState(false);
+  const showEmailCard = true;
   const [isMuted, setIsMuted] = useState(false);
   const [toast, setToast] = useState<ToastState>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
