@@ -102,9 +102,13 @@ export default function Home() {
       </div>
 
       {/* Overlay Background Image */}
-      <div 
-        className="absolute inset-0 w-full h-full z-10 pointer-events-none bg-cover bg-center animate-subtle-shake scale-[1.05]"
-        style={{ backgroundImage: 'url("/bg 1.png")' }}
+      <Image
+        src="/bg%201.png"
+        alt="Background"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover z-10 pointer-events-none animate-subtle-shake scale-[1.05]"
       />
 
       {/* Lobby Audio */}
