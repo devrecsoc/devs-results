@@ -1,38 +1,9 @@
-import { promises as fs } from "fs";
-import path from "path";
-import Papa from "papaparse";
 import { NextRequest, NextResponse } from "next/server";
-
-type ParticipantRow = {
-    email?: string;
-    name?: string;
-    team?: string;
-    regno?: string;
-};
+import { getParticipants } from "@/lib/participants";
 
 export async function GET(request: NextRequest) {
     try {
-        const csvPath = path.join(
-            process.cwd(),
-            "data",
-            "participants.csv"
-        );
-
-        const csv = await fs.readFile(csvPath, "utf8");
-
-        const parsed = Papa.parse<ParticipantRow>(csv, {
-            header: true,
-            skipEmptyLines: true,
-        });
-
-        const participants = parsed.data
-        .filter((row) => row.email && row.name && row.regno && row.team)
-        .map((row) => ({
-            email: row.email!.trim().toLowerCase(),
-            name: row.name!.trim(),
-            team: row.team!.trim(),
-            regno: row.regno!.trim(),
-        }));
+        const participants = await getParticipants();
 
         const email = request.nextUrl.searchParams
         .get("email")

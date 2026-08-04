@@ -61,7 +61,8 @@ function StatusContent() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black font-press-start-2p text-white">
-        Loading participant data...
+        <Image src={"/loading.png"} width={200} height={200} priority alt="loading"/>
+        Loading members data...
       </div>
     );
   }
@@ -99,7 +100,7 @@ function StatusContent() {
                 className="relative z-10 drop-shadow-2xl"
               />
             </div>
-            <button 
+            <button
               onClick={() => router.push("/")}
               className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
             >
@@ -127,7 +128,7 @@ function StatusContent() {
           animation: float-eject 12s linear forwards;
         }
       `}</style>
-      
+
       {/* Particles Background */}
       <div className="absolute inset-0 w-full h-full z-0 pointer-events-auto">
         <Particles
@@ -146,18 +147,18 @@ function StatusContent() {
 
       {/* Floating Character */}
       <div className="absolute top-1/2 left-1/2 w-32 h-32 animate-eject z-0 pointer-events-none">
-        <Image 
-          src="/red.webp" 
-          alt="Ejected Character" 
-          width={128} 
-          height={128} 
-          className="drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" 
+        <Image
+          src="/red.webp"
+          alt="Ejected Character"
+          width={128}
+          height={128}
+          className="drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
         />
       </div>
 
       {/* Ejection Text */}
       <div className="z-10 flex flex-col items-center gap-12 animate-in fade-in duration-[2000ms] delay-500 fill-mode-both px-4 pointer-events-none">
-        <TextType 
+        <TextType
             text={["You are not selected for the next round."]}
             className="text-lg md:text-2xl text-center font-press-start-2p text-white tracking-widest leading-loose drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
             typingSpeed={75}
@@ -172,7 +173,7 @@ function StatusContent() {
             cursorBlinkDuration={0.5}
             onSentenceComplete={() => {}}
         />
-        <button 
+        <button
           onClick={() => router.push("/")}
           className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133] pointer-events-auto relative z-50"
         >
