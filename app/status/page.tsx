@@ -9,34 +9,44 @@ import TextType from "@/components/TextType";
 type Participant = {
   email: string;
   name: string;
+  team: string;
+  regno: string;
 };
 
 function StatusContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email") || "";
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadParticipants = async () => {
+    const loadParticipant = async () => {
+      if (!email.trim()) {
+        setSelectedParticipant(null);
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch("/api/participants");
-        if (!response.ok) throw new Error("Failed to load participants");
+        const response = await fetch(`/api/participants?email=${encodeURIComponent(email)}`);
+        if (response.status === 404) {
+          setSelectedParticipant(null);
+          return;
+        }
+        if (!response.ok) throw new Error("Failed to load participant");
         const data = await response.json();
-        setParticipants(data.participants || []);
+        setSelectedParticipant(data);
       } catch (error) {
-        console.error("Failed to load participants", error);
+        console.error("Failed to load participant", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadParticipants();
-  }, []);
+    loadParticipant();
+  }, [email]);
 
-  const normalizedEmail = email.trim().toLowerCase();
-  const selectedParticipant = participants.find((participant) => participant.email === normalizedEmail);
   const isSelected = Boolean(selectedParticipant);
 
   useEffect(() => {

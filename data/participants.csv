@@ -1,4 +1,4 @@
-email,name
-selected@example.com,Selected Example
-winner@rajalakshmi.edu.in,Winner Student
-student@rajalakshmi.edu.in,Student User
+email,name,team,regno
+selected@example.com,Selected Example, Tech, 1234
+winner@rajalakshmi.edu.in,Winner Student, PR, 1345
+student@rajalakshmi.edu.in,Student User, Event, 4578
