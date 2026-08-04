@@ -8,6 +8,7 @@ import Particles from "@/components/Particles";
 export default function Home() {
   const [email, setEmail] = useState("");
   const [showConsent, setShowConsent] = useState(false);
+  const [showEmailCard, setShowEmailCard] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const router = useRouter();
@@ -123,7 +124,17 @@ export default function Home() {
         {isMuted ? "🔇" : "🔊"}
       </button>
 
+      {/* Toggle Check Card Button */}
+      <button
+        onClick={() => setShowEmailCard((prev) => !prev)}
+        className="absolute bottom-6 left-6 z-50 px-4 py-3 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xs font-press-start-2p text-white"
+        title={showEmailCard ? "Hide Check Card" : "Show Check Card"}
+      >
+                View Lobby
+      </button>
+
       <main className="relative z-20 flex flex-1 w-full items-center justify-center p-4 pointer-events-none">
+        {showEmailCard && (
         <div className="flex flex-col items-center gap-4 bg-[#576067] p-8 rounded-lg shadow-lg border-4 border-[#2f3133] pointer-events-auto">
           <h1 className="text-sm text-center font-press-start-2p font-extrabold tracking-tight text-white dark:text-zinc-100 sm:text-sm drop-shadow-md">
             Enter your Email:
@@ -136,13 +147,14 @@ export default function Home() {
             placeholder="your.email@rajalakshmi.edu.in"
             className="w-full rounded-lg border border-zinc-300 bg-black px-4 py-2 text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           /> 
-            <button 
-              onClick={() => router.push(`/status?email=${encodeURIComponent(email)}`)}
-              className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
-            >
-              Check
-            </button>
+          <button 
+            onClick={() => router.push(`/status?email=${encodeURIComponent(email)}`)}
+            className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+          >
+            Check
+          </button>
         </div>
+        )}
       </main>
     </div>
   );
