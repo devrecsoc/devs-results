@@ -10,12 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Push to personal repository
+      - name: Check secret
+        run: |
+          if [ -z "${{ secrets.DEVS_PAT }}" ]; then
+            echo "DEVS_PAT is EMPTY"
+            exit 1
+          else
+            echo "DEVS_PAT exists"
+          fi
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Push mirror
         run: |
           git remote add mirror https://x-access-token:${{ secrets.DEVS_PAT }}@github.com/devrecsoc/devs-results.git
-          git push mirror --force main
+          git push --verbose mirror main --force
