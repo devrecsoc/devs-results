@@ -1,4 +1,11 @@
-email,name,team,regno
-selected@example.com,Selected Example, Tech, 1234
-winner@rajalakshmi.edu.in,Winner Student, PR, 1345
-student@rajalakshmi.edu.in,Student User, Event, 4578
+email,name,roll_number,year_dept,team,role
+vijayghanesh.gj.2025.bt@rajalakshmi.edu.in,Vijay Ghanesh G J,250401172,"Year II, Bio Tech",Tech Team,IoT
+chithralekha.b.2025.ece@rajalakshmi.edu.in,Chithralekha B,250801073,"Year II, ECE",Tech Team,IoT
+kamlesh.a.2025.cse@rajalakshmi.edu.in,Kamlesh A,250701314,"Year II, CSE",Tech Team,Full Stack
+saikishore.s.2025.it@rajalakshmi.edu.in,Sai Kishore S,251001224,"Year II, IT",Tech Team,Full Stack
+sarvin.s.2025.eee@rajalakshmi.edu.in,Sarvin S,250901093,"Year II, EEE",Tech Team,Full Stack 
+asvand.k.2025.aids@rajalakshmi.edu.in,Asvand K,251801035,"Year II, AIDS",Tech Team,Full Stack
+sabharisainath.am.2025.it@rajalakshmi.edu.in,Sabhari Sainath AM,251001222,"Year II, IT",Tech Team,AI/ML
+saisrikar.b.2025.aids@rajalakshmi.edu.in,Sai Srikar B,251801280,"Year II, AIDS",Tech Team,AI/ML
+padmasree.m.2025.cse@rajalakshmi.edu.in,Padma Sree M,250701507,"Year II, CSE",Tech Team,AI/ML
+akesh.h.2025.it@rajalakshmi.edu.in,Akesh H,251001009,"Year II, IT",Tech Team,AI/ML
