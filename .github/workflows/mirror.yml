@@ -17,5 +17,5 @@ jobs:
 
       - name: Push to personal repository
         run: |
-          git remote add mirror https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/devrecsoc/devs-results.git
+          git remote add mirror https://x-access-token:${{ secrets.DEVS_PAT }}@github.com/devrecsoc/devs-results.git
           git push mirror --force main
