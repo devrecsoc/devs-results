@@ -13,15 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Check secret
-        run: |
-          if [ -z "${{ secrets.DEVS_PAT }}" ]; then
-            echo "DEVS_PAT is EMPTY"
-            exit 1
-          else
-            echo "DEVS_PAT exists"
-          fi
+          persist-credentials: false
 
       - name: Configure Git
         run: |
@@ -30,5 +22,5 @@ jobs:
 
       - name: Push mirror
         run: |
-          git remote add mirror https://x-access-token:${{ secrets.DEVS_PAT }}@github.com/devrecsoc/devs-results.git
-          git push --verbose mirror main --force
+          git remote set-url origin https://x-access-token:${{ secrets.DEVS_PAT }}@github.com/devrecsoc/devs-results.git
+          git push --force origin main
