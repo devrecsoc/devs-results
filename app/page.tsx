@@ -9,6 +9,7 @@ import { Toaster, ToastState } from "@/components/Toast";
 export default function Home() {
   const [email, setEmail] = useState("");
   const [showConsent, setShowConsent] = useState(false);
+  const [isAudioConsent, setAudioConsent] = useState(false);
   const showEmailCard = true;
   const [isMuted, setIsMuted] = useState(false);
   const [toast, setToast] = useState<ToastState>(null);
@@ -17,17 +18,28 @@ export default function Home() {
   const isValidEmail = email.trim() !== "" && /\S+@\S+\.\S+/.test(email);
 
   useEffect(() => {
-    const consent = sessionStorage.getItem("audioConsent");
-    if (!consent) {
+    // #TODO: FIX NEEDED
+    // Tried showing consent form popup only on reload but 
+    // also pops up on coming back from any other page.
+    // Needs fix if possible.
+    const navigation = performance.getEntriesByType(
+      "navigation",
+    )[0] as PerformanceNavigationTiming;
+
+    if (
+      navigation &&
+      (navigation.type === "reload" || navigation.type === "navigate")
+    ) {
       setShowConsent(true);
-    } else if (consent === "true") {
-      audioRef.current?.play().catch((e) => console.error(e));
+    } else {
+      setShowConsent(false);
     }
   }, []);
 
   const handleConsent = (allow: boolean) => {
     sessionStorage.setItem("audioConsent", allow ? "true" : "false");
     setShowConsent(false);
+    setAudioConsent(allow);
     if (allow) {
       audioRef.current?.play().catch((e) => console.error(e));
     }
@@ -122,13 +134,15 @@ export default function Home() {
       <audio ref={audioRef} src="/lobby.mp3" loop preload="auto" />
 
       {/* Mute Button */}
-      <button
-        onClick={toggleMute}
-        className="absolute bottom-6 right-6 z-50 p-4 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xl"
-        title="Toggle Sound"
-      >
-        {isMuted ? "🔇" : "🔊"}
-      </button>
+      {isAudioConsent && (
+        <button
+          onClick={toggleMute}
+          className="absolute bottom-6 right-6 z-50 p-4 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xl"
+          title="Toggle Sound"
+        >
+          {isMuted ? "🔇" : "🔊"}
+        </button>
+      )}
 
       {/* View Lobby Button */}
       <button
@@ -157,7 +171,10 @@ export default function Home() {
               // disabled={}
               onClick={() => {
                 if (!isValidEmail) {
-                  setToast({ message: "Please enter a valid email.", type: "error" });
+                  setToast({
+                    message: "Please enter a valid email.",
+                    type: "error",
+                  });
                   return;
                 }
                 router.push(`/status?email=${encodeURIComponent(email)}`);
