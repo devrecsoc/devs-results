@@ -7,13 +7,15 @@ export type Participant = {
   name: string;
   team: string;
   regno: string;
+  role?: string;
 };
 
 type ParticipantRow = {
   email?: string;
   name?: string;
   team?: string;
-  regno?: string;
+  roll_number?: string;
+  role?: string;
 };
 
 export async function getParticipants(): Promise<Participant[]> {
@@ -26,11 +28,48 @@ export async function getParticipants(): Promise<Participant[]> {
   });
 
   return parsed.data
-    .filter((row) => row.email && row.name && row.regno && row.team)
+    .filter((row) => row.email && row.name && row.roll_number && row.team)
     .map((row) => ({
       email: row.email!.trim().toLowerCase(),
       name: row.name!.trim(),
       team: row.team!.trim(),
-      regno: row.regno!.trim(),
+      regno: row.roll_number!.trim(),
+      role: row.role?.trim() || undefined,
+    }));
+}
+
+export type CoreMember = {
+  email: string;
+  name: string;
+  regno: string;
+  team: string;
+  role: string;
+};
+
+type CoreRow = {
+  email?: string;
+  name?: string;
+  roll_number?: string;
+  team?: string;
+  role?: string;
+};
+
+export async function getCoreMembers(): Promise<CoreMember[]> {
+  const csvPath = path.join(process.cwd(), "data", "core.csv");
+  const csv = await fs.readFile(csvPath, "utf8");
+
+  const parsed = Papa.parse<CoreRow>(csv, {
+    header: true,
+    skipEmptyLines: true,
+  });
+
+  return parsed.data
+    .filter((row) => row.email && row.name)
+    .map((row) => ({
+      email: row.email!.trim().toLowerCase(),
+      name: row.name!.trim(),
+      regno: row.roll_number?.trim() || "",
+      team: row.team?.trim() || "",
+      role: row.role?.trim() || "",
     }));
 }
