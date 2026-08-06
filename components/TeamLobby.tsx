@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import SharePreviewModal from "@/components/share/SharePreviewModal";
+import { captureElement } from "@/lib/share/capture";
 
 type Member = {
   email?: string;
@@ -60,10 +62,11 @@ function normalize(value: string) {
   return value.trim().toLowerCase();
 }
 
-// Deterministic per-member hash so each person always lands on the same
-// crewmate art, but which art that is doesn't follow their sort position.
 function avatarIndexFor(member: Member) {
   const key = member.email ?? member.name;
+  if (member.regno === "241501014") {
+    return 6;
+  }
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
     hash = (hash * 31 + key.charCodeAt(i)) | 0;
@@ -87,6 +90,25 @@ export default function TeamLobby() {
   const [allMembers, setAllMembers] = useState<ApiMember[]>([]);
   const [slug, setSlug] = useState(() => slugForTeam(requestedTeam));
   const [loading, setLoading] = useState(true);
+  const captureRef = useRef<HTMLElement>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareBlob, setShareBlob] = useState<Blob | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  const handleShare = async () => {
+    if (!captureRef.current) return;
+    setShareOpen(true);
+    setIsCapturing(true);
+    try {
+      const blob = await captureElement(captureRef.current);
+      setShareBlob(blob);
+    } catch (error) {
+      console.error("Failed to capture screenshot", error);
+      setShareBlob(null);
+    } finally {
+      setIsCapturing(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -177,133 +199,138 @@ export default function TeamLobby() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#111b23] font-press-start-2p text-white">
-      <style>{`
-        @keyframes subtle-shake {
-          0% { transform: scale(1.05) translate(0, 0) rotate(0deg); }
-          25% { transform: scale(1.05) translate(3px, 2px) rotate(0.5deg); }
-          50% { transform: scale(1.05) translate(-2px, -3px) rotate(-0.5deg); }
-          75% { transform: scale(1.05) translate(-4px, 2px) rotate(0.2deg); }
-          100% { transform: scale(1.05) translate(0, 0) rotate(0deg); }
-        }
-        .animate-subtle-shake {
-          animation: subtle-shake 4s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-subtle-shake {
-            animation: none;
-            transform: scale(1.02);
-          }
-        }
-      `}</style>
-      <Image
-        src="/lobby.webp"
-        alt="Among Us style team lobby"
-        fill
-        priority
-        sizes="100vw"
-        className="z-0 object-cover object-center animate-subtle-shake"
-      />
-      <div className="absolute inset-0 bg-[#081017]/25" />
+    <>
+      <main
+        ref={captureRef}
+        className="relative min-h-screen overflow-hidden bg-[#111b23] font-press-start-2p text-white"
+      >
+        <Image
+          src="/lobby.webp"
+          alt="Among Us style team lobby"
+          fill
+          priority
+          sizes="100vw"
+          className="z-0 object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[#081017]/25" />
 
-      <div className="relative z-10 min-h-screen px-4 py-5 sm:px-8 sm:py-8">
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="absolute left-4 top-4 rounded-md border-2 border-[#15191d] bg-[#58646b]/90 px-3 py-2 text-[9px] text-white shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:left-8 sm:top-8"
-          >
-            ← BACK
-          </button>
-
-          <button
-            type="button"
-            onClick={() => router.push("/results")}
-            className="border-2 border-[#15191d] bg-[#58646b]/90 px-3 py-2 text-[8px] shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:text-[10px]"
-          >
-            ALL TEAMS
-          </button>
-        </div>
-
-        <div className="mx-auto flex max-w-5xl flex-col items-center">
-          <div className="relative mt-9 border-4 border-[#121518] bg-[#20272a] px-9 py-3 shadow-[6px_6px_0_rgba(0,0,0,0.65)] sm:px-16 sm:py-4">
+        <div className="relative z-10 min-h-screen px-4 py-5 sm:px-8 sm:py-8">
+          <div className="flex justify-end">
             <button
               type="button"
-              onClick={() => goToTeam(-1)}
-              aria-label="Previous team"
-              className="absolute -left-10 top-1/2 -translate-y-1/2 text-2xl text-[#cb3030] transition-transform hover:scale-125 active:scale-95 sm:-left-14 sm:text-4xl"
+              onClick={() => router.push("/")}
+              className="absolute left-4 top-4 rounded-md border-2 border-[#15191d] bg-[#58646b]/90 px-3 py-2 text-[9px] text-white shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:left-8 sm:top-8"
             >
-              ◀
+              ← BACK
             </button>
-            <h1 className="text-center text-lg tracking-[0.18em] text-[#f5f0d9] drop-shadow-[3px_3px_0_#111] sm:text-3xl">
-              {title}
-            </h1>
+
             <button
               type="button"
-              onClick={() => goToTeam(1)}
-              aria-label="Next team"
-              className="absolute -right-10 top-1/2 -translate-y-1/2 text-2xl text-[#cb3030] transition-transform hover:scale-125 active:scale-95 sm:-right-14 sm:text-4xl"
+              onClick={() => router.push("/results")}
+              className="border-2 border-[#15191d] bg-[#58646b]/90 px-3 py-2 text-[8px] shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:text-[10px]"
             >
-              ▶
+              ALL TEAMS
             </button>
           </div>
-          <p className="mt-3 bg-[#11191d]/70 px-3 py-1 text-[8px] text-[#e7e1ca] sm:text-[10px]">
-            {loading
-              ? "LOADING CREWMATES..."
-              : `${members.length} CREWMATES READY`}
-          </p>
-        </div>
 
-        <section
-          aria-label={`${title} team members`}
-          className="relative mx-auto mt-4 min-h-[58vh] max-w-6xl overflow-y-auto pb-20 sm:mt-0 sm:min-h-[64vh]"
-        >
-          <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-24 w-40 -translate-x-1/2 -translate-y-1/2 -rotate-2 border-4 border-[#161b1d] bg-[#48545a] shadow-[7px_7px_0_rgba(0,0,0,0.55)] sm:block">
-            <div className="m-3 h-10 border-2 border-[#222a2d] bg-[#849096]" />
-            <div className="mx-auto h-2 w-16 bg-[#c7d2cf]" />
+          <div className="mx-auto flex max-w-5xl flex-col items-center">
+            <div className="relative mt-9 border-4 border-[#121518] bg-[#20272a] px-9 py-3 shadow-[6px_6px_0_rgba(0,0,0,0.65)] sm:px-16 sm:py-4">
+              <button
+                type="button"
+                onClick={() => goToTeam(-1)}
+                aria-label="Previous team"
+                className="absolute -left-10 top-1/2 -translate-y-1/2 text-2xl text-[#cb3030] transition-transform hover:scale-125 active:scale-95 sm:-left-14 sm:text-4xl"
+              >
+                ◀
+              </button>
+              <h1 className="text-center text-lg tracking-[0.18em] text-[#f5f0d9] drop-shadow-[3px_3px_0_#111] sm:text-3xl">
+                {title}
+              </h1>
+              <button
+                type="button"
+                onClick={() => goToTeam(1)}
+                aria-label="Next team"
+                className="absolute -right-10 top-1/2 -translate-y-1/2 text-2xl text-[#cb3030] transition-transform hover:scale-125 active:scale-95 sm:-right-14 sm:text-4xl"
+              >
+                ▶
+              </button>
+            </div>
+            <p className="mt-3 bg-[#11191d]/70 px-3 py-1 text-[8px] text-[#e7e1ca] sm:text-[10px]">
+              {loading
+                ? "LOADING CREWMATES..."
+                : `${members.length} CREWMATES READY`}
+            </p>
           </div>
 
-          {loading ? (
-            <div className="flex min-h-[50vh] items-center justify-center text-[10px] text-[#f5f0d9]">
-              LOADING CREWMATES...
+          <section
+            aria-label={`${title} team members`}
+            className="relative mx-auto mt-4 flex min-h-[58dvh] max-w-6xl flex-col justify-end overflow-y-auto pb-20 sm:mt-0 sm:min-h-[64dvh]"
+          >
+            <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-24 w-40 -translate-x-1/2 -translate-y-1/2 -rotate-2 border-4 border-[#161b1d] bg-[#48545a] shadow-[7px_7px_0_rgba(0,0,0,0.55)] sm:block">
+              <div className="m-3 h-10 border-2 border-[#222a2d] bg-[#849096]" />
+              <div className="mx-auto h-2 w-16 bg-[#c7d2cf]" />
             </div>
-          ) : members.length === 0 ? (
-            <div className="flex min-h-[50vh] items-center justify-center text-center text-[10px] text-[#f5f0d9]">
-              NO CREWMATES FOUND
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-x-3 gap-y-6 px-2 pt-4 sm:grid-cols-3 sm:gap-x-8 sm:gap-y-8 sm:px-8 lg:grid-cols-4">
-              {members.map((member, index) => (
-                <article
-                  key={member.email ?? `${member.name}-${index}`}
-                  className="relative z-10 flex min-w-0 flex-col items-center justify-end text-center"
-                >
-                  {member.isCore && (
-                    <span className="mb-1 whitespace-nowrap rounded-sm border-2 border-[#7a0f0f] bg-[#c51111] px-1.5 py-0.5 text-[6px] tracking-wide text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] sm:text-[7px]">
-                      DEVS CORE
-                    </span>
-                  )}
-                  <Image
-                    src={`/teams/${AVATAR_ART_SLUG}/${avatarIndexFor(member)}.png`}
-                    alt={`${member.name} avatar`}
-                    width={150}
-                    height={150}
-                    className="h-24 w-24 object-contain drop-shadow-[5px_7px_0_rgba(0,0,0,0.5)] sm:h-32 sm:w-32"
-                  />
-                  <div className="-mt-0.75 max-w-full border-2 border-[#15191d] bg-[#e6e0c8] px-2 py-1 text-[8px] leading-relaxed text-[#172027] shadow-[3px_3px_0_rgba(0,0,0,0.6)] sm:text-[10px]">
-                    <p className="truncate">{member.name}</p>
-                    {member.role && (
-                      <p className="truncate text-[7px] text-[#58636a]">
-                        {member.role}
-                      </p>
+
+            {loading ? (
+              <div className="flex min-h-[50dvh] items-center justify-center text-[10px] text-[#f5f0d9]">
+                LOADING CREWMATES...
+              </div>
+            ) : members.length === 0 ? (
+              <div className="flex min-h-[50dvh] items-center justify-center text-center text-[10px] text-[#f5f0d9]">
+                NO CREWMATES FOUND
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-6 px-2 pt-4 sm:grid-cols-3 sm:gap-x-8 sm:gap-y-8 sm:px-8 lg:grid-cols-4">
+                {members.map((member, index) => (
+                  <article
+                    key={member.email ?? `${member.name}-${index}`}
+                    className="relative z-10 flex min-w-0 flex-col items-center justify-end text-center"
+                  >
+                    {member.isCore && (
+                      <span className="mb-1 whitespace-nowrap rounded-sm border-2 border-[#7a0f0f] bg-[#c51111] px-1.5 py-0.5 text-[6px] tracking-wide text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] sm:text-[7px]">
+                        DEVS CORE
+                      </span>
                     )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
-      </div>
-    </main>
+                    <Image
+                      src={`/teams/${AVATAR_ART_SLUG}/${avatarIndexFor(member)}.png`}
+                      alt={`${member.name} avatar`}
+                      width={150}
+                      height={150}
+                      loading="eager"
+                      className="h-24 w-24 object-contain drop-shadow-[5px_7px_0_rgba(0,0,0,0.5)] sm:h-32 sm:w-32"
+                    />
+                    <div className="-mt-0.75 max-w-full border-2 border-[#15191d] bg-[#e6e0c8] px-2 py-1 text-[8px] leading-relaxed text-[#172027] shadow-[3px_3px_0_rgba(0,0,0,0.6)] sm:text-[10px]">
+                      <p className="truncate">{member.name}</p>
+                      {member.role && (
+                        <p className="truncate text-[7px] text-[#58636a]">
+                          {member.role}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      </main>
+      <button
+        type="button"
+        onClick={handleShare}
+        disabled={isCapturing}
+        className="fixed bottom-4 right-4 z-50 rounded-md border-2 border-[#15191d] bg-cyan-700/90 px-3 py-2 text-[9px] text-white shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 hover:bg-cyan-600/90 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 sm:bottom-6 sm:right-6 sm:text-[10px] font-press-start-2p"
+      >
+        {isCapturing ? "CAPTURING..." : "SHARE"}
+      </button>
+      <SharePreviewModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        imageBlob={shareBlob}
+        isCapturing={isCapturing}
+        shareTitle="DEVS REC"
+        shareText={`Check out the ${title} lobby at DEVS REC!`}
+        fileName={`devs-team-${slug}.png`}
+      />
+    </>
   );
 }
