@@ -84,7 +84,7 @@ function StatusContent() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black font-press-start-2p text-white">
         <Image
-          src={"/loading.png"}
+          src={"/loading-opt.webp"}
           width={200}
           height={200}
           priority
@@ -114,15 +114,15 @@ function StatusContent() {
         noteContent={
           <>
             <p className="text-center text-2xl mb-3">🎉🏆🎉</p>
-            <p className="text-xs md:text-sm font-press-start-2p text-amber-100 leading-loose">
+            <p className="text-[10px] sm:text-xs md:text-sm font-press-start-2p text-amber-100 leading-loose">
               Congratulations
               {selectedParticipant?.name ? `, ${selectedParticipant.name}` : ""}
               ! You have been selected as a{" "}
               {selectedParticipant?.team ? ` ${selectedParticipant.team} ` : ""}
               Member at DEVS REC.Your dedication, skill and potential stood out
-              throughout the selection process. We're excited to have you on the
-              team and can't wait to create, collaborate, and grow together.
-              Welcome aboard!
+              throughout the selection process. We&apos;re excited to have you
+              on the team and can&apos;t wait to create, collaborate, and grow
+              together. Welcome aboard!
             </p>
           </>
         }
@@ -188,16 +188,16 @@ function StatusContent() {
           cursorBlinkDuration={0.5}
           onSentenceComplete={() => {}}
         />
-        <div className="flex items-center gap-4 pointer-events-auto relative z-50">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pointer-events-auto relative z-50">
           <button
             onClick={() => router.push("/")}
-            className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+            className="mt-4 px-4 sm:px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
           >
             Go Back
           </button>
           <button
             onClick={() => setShowNote(true)}
-            className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+            className="mt-4 px-4 sm:px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
           >
             Show Note
           </button>
@@ -211,21 +211,21 @@ function StatusContent() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md max-h-[80vh] flex flex-col rounded-2xl border-2 border-[#2f3133] bg-[#0b0d10] shadow-md animate-in zoom-in-95 fade-in duration-300"
+            className="relative w-full max-w-sm sm:max-w-md max-h-[85vh] flex flex-col rounded-2xl border-2 border-[#2f3133] bg-[#0b0d10] shadow-md animate-in zoom-in-95 fade-in duration-300"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b-2 border-[#2f3133]">
-              <h3 className="font-press-start-2p text-xs md:text-sm text-white">
+            <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-5 sm:py-4 border-b-2 border-[#2f3133]">
+              <h3 className="font-press-start-2p text-[10px] sm:text-xs md:text-sm text-white">
                 Report
               </h3>
               <button
                 onClick={() => setShowNote(false)}
-                className="text-white/70 hover:text-white font-press-start-2p text-xs px-2 py-1 rounded border border-[#2f3133] hover:bg-zinc-800 transition-all"
+                className="shrink-0 text-white/70 hover:text-white font-press-start-2p text-xs px-2 py-1 rounded border border-[#2f3133] hover:bg-zinc-800 transition-all"
               >
                 X
               </button>
             </div>
-            <div className="overflow-y-auto px-5 py-5">
-              <p className="text-xs md:text-sm font-press-start-2p text-zinc-300 leading-relaxed">
+            <div className="overflow-y-auto px-4 py-4 sm:px-5 sm:py-5">
+              <p className="text-[10px] sm:text-xs md:text-sm font-press-start-2p text-zinc-300 leading-relaxed">
                 Thank you for applying to DEVS REC. After careful review of your
                 application, we regret to inform you that you have not been
                 selected for the Board Member position. We sincerely appreciate
