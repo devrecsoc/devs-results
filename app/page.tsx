@@ -120,7 +120,7 @@ export default function Home() {
 
       {/* Overlay Background Image */}
       <Image
-        src="/bg%201.png"
+        src="/bg-opt.webp"
         alt="Background"
         fill
         priority
