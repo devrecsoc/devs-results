@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Share2 } from "lucide-react";
 import SharePreviewModal from "@/components/share/SharePreviewModal";
 import { captureElement } from "@/lib/share/capture";
 
@@ -318,8 +319,9 @@ export default function TeamLobby() {
         type="button"
         onClick={handleShare}
         disabled={isCapturing}
-        className="fixed bottom-4 right-4 z-50 rounded-md border-2 border-[#15191d] bg-cyan-700/90 px-3 py-2 text-[9px] text-white shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 hover:bg-cyan-600/90 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 sm:bottom-6 sm:right-6 sm:text-[10px] font-press-start-2p"
+        className="fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-md border-2 border-[#15191d] bg-cyan-700/90 px-5 py-3 text-xs text-white shadow-[3px_3px_0_#15191d] transition-transform hover:-translate-y-0.5 hover:bg-cyan-600/90 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 sm:bottom-6 sm:right-6 sm:px-6 sm:py-4 sm:text-sm font-press-start-2p"
       >
+        <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
         {isCapturing ? "CAPTURING..." : "SHARE"}
       </button>
       <SharePreviewModal

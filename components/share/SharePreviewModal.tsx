@@ -115,6 +115,17 @@ export default function SharePreviewModal({
             </div>
           )}
 
+          {!isCapturing && imageUrl && (
+            <div className="w-full rounded-lg border-2 border-dashed border-amber-400/50 bg-amber-400/10 px-3 py-3 text-center">
+              <p className="font-press-start-2p text-[9px] sm:text-[10px] text-amber-300 leading-relaxed">
+                📢 POST &amp; TAG US
+              </p>
+              <p className="mt-1 font-press-start-2p text-[8px] sm:text-[9px] text-amber-100/90 leading-relaxed">
+                on LinkedIn &amp; Instagram — @devsrec
+              </p>
+            </div>
+          )}
+
           {supportsNativeShare && (
             <button
               onClick={handleNativeShare}

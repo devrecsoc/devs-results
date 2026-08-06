@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React, { ReactNode } from "react";
+import { Share2 } from "lucide-react";
 
 type ResultCardProps = {
   ref?: React.Ref<HTMLDivElement>;
@@ -127,8 +128,9 @@ export default function ResultCard({
                 <button
                   onClick={onShare}
                   disabled={isSharing}
-                  className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-cyan-700 hover:bg-cyan-600 disabled:opacity-50 disabled:hover:bg-cyan-700 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+                  className="flex items-center gap-2 px-6 sm:px-10 py-3 sm:py-4 text-base sm:text-lg bg-cyan-700 hover:bg-cyan-600 disabled:opacity-50 disabled:hover:bg-cyan-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95 border-2 border-[#2f3133]"
                 >
+                  <Share2 className="h-5 w-5 sm:h-6 sm:w-6" />
                   {isSharing ? "Capturing..." : "Share"}
                 </button>
               )}
