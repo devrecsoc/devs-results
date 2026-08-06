@@ -135,7 +135,7 @@ export default function Home() {
       {isAudioConsent && (
         <button
           onClick={toggleMute}
-          className="absolute bottom-6 right-6 z-50 p-4 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xl"
+          className="absolute top-6 right-6 z-50 p-4 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xl"
           title="Toggle Sound"
         >
           {isMuted ? "🔇" : "🔊"}
@@ -145,10 +145,10 @@ export default function Home() {
       {/* Next: open the team lobby, using the entered email when available. */}
       <button
         onClick={goToTeamLobby}
-        className="absolute bottom-6 left-6 z-50 px-4 py-3 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xs font-press-start-2p text-white"
+        className="absolute top-6 left-6 z-50 px-4 py-3 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xs font-press-start-2p text-white"
         title="Open team lobby"
       >
-        Next →
+        Hall of Fame →
       </button>
 
       <main className="relative z-20 flex flex-1 w-full items-center justify-center p-4 pointer-events-none">

@@ -1,11 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import Particles from "@/components/Particles";
 import TextType from "@/components/TextType";
 import ResultCard from "@/components/ResultCard";
+import SharePreviewModal from "@/components/share/SharePreviewModal";
+import { captureElement } from "@/lib/share/capture";
 
 type Participant = {
   email: string;
@@ -22,6 +24,25 @@ function StatusContent() {
     useState<Participant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showNote, setShowNote] = useState(false);
+  const captureRef = useRef<HTMLDivElement>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareBlob, setShareBlob] = useState<Blob | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  const handleShare = async () => {
+    if (!captureRef.current) return;
+    setShareOpen(true);
+    setIsCapturing(true);
+    try {
+      const blob = await captureElement(captureRef.current);
+      setShareBlob(blob);
+    } catch (error) {
+      console.error("Failed to capture screenshot", error);
+      setShareBlob(null);
+    } finally {
+      setIsCapturing(false);
+    }
+  };
 
   useEffect(() => {
     const loadParticipant = async () => {
@@ -97,7 +118,9 @@ function StatusContent() {
 
   if (isSelected) {
     return (
+      <>
       <ResultCard
+        ref={captureRef}
         title="Congratulations!"
         name={selectedParticipant?.name}
         team={selectedParticipant?.team}
@@ -110,6 +133,8 @@ function StatusContent() {
         }
         showNote={showNote}
         onToggleNote={setShowNote}
+        onShare={handleShare}
+        isSharing={isCapturing}
         noteTitle="A Note For You"
         noteContent={
           <>
@@ -127,6 +152,16 @@ function StatusContent() {
           </>
         }
       />
+      <SharePreviewModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        imageBlob={shareBlob}
+        isCapturing={isCapturing}
+        shareTitle="DEVS REC"
+        shareText={`I'm officially part of the ${selectedParticipant?.team} at DEVS REC! 🎉`}
+        fileName={`devs-results-${selectedParticipant?.name ?? "member"}.png`}
+      />
+      </>
     );
   }
 

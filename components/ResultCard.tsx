@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 type ResultCardProps = {
+  ref?: React.Ref<HTMLDivElement>;
   title: string;
   titleClassName?: string;
   name?: string;
@@ -15,6 +16,8 @@ type ResultCardProps = {
   glowClassName?: string;
   onGoBack: () => void;
   onNext?: () => void;
+  onShare?: () => void;
+  isSharing?: boolean;
   showNote: boolean;
   onToggleNote: (show: boolean) => void;
   noteTitle: string;
@@ -24,6 +27,7 @@ type ResultCardProps = {
 };
 
 export default function ResultCard({
+  ref,
   title,
   titleClassName,
   name,
@@ -35,6 +39,8 @@ export default function ResultCard({
   glowClassName,
   onGoBack,
   onNext,
+  onShare,
+  isSharing = false,
   showNote,
   onToggleNote,
   noteTitle,
@@ -43,7 +49,10 @@ export default function ResultCard({
   noteContent,
 }: ResultCardProps) {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-cover bg-center bg-black font-sans w-full min-h-screen overflow-x-hidden">
+    <div
+      ref={ref}
+      className="flex flex-col flex-1 items-center justify-center bg-cover bg-center bg-black font-sans w-full min-h-screen overflow-x-hidden"
+    >
       <main className="flex flex-1 w-full items-center justify-center p-4">
         <div className="flex flex-col gap-2 items-center px-6 py-8 sm:p-10 rounded-2xl shadow-2xl max-w-full w-full animate-in fade-in zoom-in-95 duration-1000 ease-out fill-mode-both">
           <h1
@@ -62,7 +71,7 @@ export default function ResultCard({
             )}
             {team && (
               <span className="text-[10px] sm:text-sm md:text-xl w-full wrap-break-word text-center font-press-start-2p tracking-widest text-cyan-300 drop-shadow-md">
-                <span className="text-white">DEVS'26</span> - {team}
+                <span className="text-white">DEVS&apos;26</span> - {team}
               </span>
             )}
             {subtitle && (
@@ -89,27 +98,41 @@ export default function ResultCard({
               className="relative z-10 drop-shadow-2xl"
             />
           </div>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <button
-              onClick={onGoBack}
-              className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
-            >
-              Go Back
-            </button>
-            {onNext && (
+          <div className="mt-4 flex flex-col flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <div className="flex flex-wrap gap-2 sm:gap-4 justify-center">
               <button
-                onClick={onNext}
-                className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-[#58646b] hover:bg-zinc-600 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+                onClick={onGoBack}
+                className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
               >
-                Next →
+                Go Back
               </button>
-            )}
-            <button
-              onClick={() => onToggleNote(true)}
-              className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
-            >
-              Show Note
-            </button>
+              {onNext && (
+                <button
+                  onClick={onNext}
+                  className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+                >
+                  Next →
+                </button>
+              )}
+              <button
+                onClick={() => onToggleNote(true)}
+                className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+              >
+                Show Note
+              </button>
+            </div>
+
+            <div>
+              {onShare && (
+                <button
+                  onClick={onShare}
+                  disabled={isSharing}
+                  className="px-3 sm:px-6 py-2 text-sm sm:text-base bg-cyan-700 hover:bg-cyan-600 disabled:opacity-50 disabled:hover:bg-cyan-700 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+                >
+                  {isSharing ? "Capturing..." : "Share"}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </main>
