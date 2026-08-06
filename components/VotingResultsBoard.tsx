@@ -215,9 +215,11 @@ export default function VotingResultsBoard({
                     >
                       {student.team}
                     </span>
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white bg-amber-800">
-                      {student.role}
-                    </span>
+                    {student.role && (
+                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white bg-amber-800">
+                        {student.role}
+                      </span>
+                    )}
                   </div>
                 );
               })}
