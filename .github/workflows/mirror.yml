@@ -10,17 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Configure Git
+      - name: Mirror clone and push (no marketplace actions)
+        env:
+          SOURCE_REPO: ${{ github.repository }}
+          TARGET_REPO: devrecsoc/devs-results
+          SOURCE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_TOKEN: ${{ secrets.DEVS_PAT }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+          echo "git version: $(git --version)"
 
-      - name: Push mirror
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.DEVS_PAT }}@github.com/devrecsoc/devs-results.git
-          git push --force origin main
+          # Clone all refs and history from the source repo
+          git clone --mirror https://x-access-token:${SOURCE_TOKEN}@github.com/${SOURCE_REPO} repo.git
+          cd repo.git
+
+          # Set push URL to target (use DEVS_PAT which must have write access)
+          git remote set-url --push origin https://x-access-token:${TARGET_TOKEN}@github.com/${TARGET_REPO}
+
+          # Push everything (branches, tags, refs)
+          git push --mirror origin
