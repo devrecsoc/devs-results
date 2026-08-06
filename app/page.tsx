@@ -51,6 +51,11 @@ export default function Home() {
     }
   };
 
+  const goToTeamLobby = () => {
+    const query = email.trim() ? `?email=${encodeURIComponent(email)}` : "";
+    router.push(`/team${query}`);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -137,13 +142,13 @@ export default function Home() {
         </button>
       )}
 
-      {/* View Lobby Button */}
+      {/* Next: open the team lobby, using the entered email when available. */}
       <button
-        onClick={() => router.push("/results")}
+        onClick={goToTeamLobby}
         className="absolute bottom-6 left-6 z-50 px-4 py-3 bg-[#576067]/80 backdrop-blur-md rounded-full border-2 border-[#2f3133] pointer-events-auto shadow-xl hover:bg-zinc-600 transition-all active:scale-95 text-xs font-press-start-2p text-white"
-        title="View Lobby"
+        title="Open team lobby"
       >
-        View Lobby
+        Next →
       </button>
 
       <main className="relative z-20 flex flex-1 w-full items-center justify-center p-4 pointer-events-none">

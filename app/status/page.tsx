@@ -103,6 +103,11 @@ function StatusContent() {
         subtitle={selectedParticipant?.team}
         imageSrc="/red.webp"
         onGoBack={() => router.push("/")}
+        onNext={() =>
+          router.push(
+            `/team?email=${encodeURIComponent(selectedParticipant?.email ?? email)}`,
+          )
+        }
         showNote={showNote}
         onToggleNote={setShowNote}
         noteTitle="A Note For You"

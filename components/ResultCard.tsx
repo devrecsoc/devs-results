@@ -13,6 +13,7 @@ type ResultCardProps = {
   imageSrc: string;
   glowClassName?: string;
   onGoBack: () => void;
+  onNext?: () => void;
   showNote: boolean;
   onToggleNote: (show: boolean) => void;
   noteTitle: string;
@@ -31,6 +32,7 @@ export default function ResultCard({
   imageSrc,
   glowClassName,
   onGoBack,
+  onNext,
   showNote,
   onToggleNote,
   noteTitle,
@@ -86,6 +88,14 @@ export default function ResultCard({
             >
               Go Back
             </button>
+            {onNext && (
+              <button
+                onClick={onNext}
+                className="mt-4 px-6 py-2 bg-[#58646b] hover:bg-zinc-600 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
+              >
+                Next →
+              </button>
+            )}
             <button
               onClick={() => onToggleNote(true)}
               className="mt-4 px-6 py-2 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-all shadow-md active:scale-95 border-2 border-[#2f3133]"
