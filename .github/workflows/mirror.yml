@@ -1,0 +1,26 @@
+name: Mirror Repository
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Push mirror
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.DEVS_PAT }}@github.com/devrecsoc/devs-results.git
+          git push --force origin main
