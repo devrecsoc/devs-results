@@ -11,10 +11,24 @@ export const metadata: Metadata = {
 };
 
 export default async function ResultsPage() {
-  const [students, coreLeads] = await Promise.all([
+  const [participants, coreMembers] = await Promise.all([
     getParticipants(),
     getCoreMembers(),
   ]);
+  // Strip email before this reaches the client — the board only needs
+  // name/regno/team/role, and email is PII we shouldn't ship to every visitor.
+  const students = participants.map((p) => ({
+    name: p.name,
+    team: p.team,
+    regno: p.regno,
+    role: p.role,
+  }));
+  const coreLeads = coreMembers.map((m) => ({
+    name: m.name,
+    regno: m.regno,
+    team: m.team,
+    role: m.role,
+  }));
 
   return (
     <div className="relative flex min-h-screen flex-1 items-center justify-center overflow-hidden bg-black p-4">
