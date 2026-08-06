@@ -8,6 +8,7 @@ type ResultCardProps = {
   titleClassName?: string;
   name?: string;
   role?: string;
+  team?: string;
   subtitle?: string;
   subtitleClassName?: string;
   imageSrc: string;
@@ -27,6 +28,7 @@ export default function ResultCard({
   titleClassName,
   name,
   role,
+  team,
   subtitle,
   subtitleClassName,
   imageSrc,
@@ -53,9 +55,15 @@ export default function ResultCard({
           </h1>
           <div className="flex flex-col items-center gap-2 mt-3">
             {name && (
-              <h2 className="w-full text-yellow-200 flex flex-col gap-2 overflow-x-hidden sm:text-base text-md text-center font-press-start-2p font-semibold tracking-tight drop-shadow-md">
-                {name} <span className="text-green-300">{role && `${role}`}</span>
+              <h2 className="w-full text-yellow-300 flex flex-col gap-2 overflow-x-hidden sm:text-base text-md text-center font-press-start-2p font-semibold tracking-tight drop-shadow-md">
+                {name}{" "}
+                <span className="text-green-300">{role && `${role}`}</span>
               </h2>
+            )}
+            {team && (
+              <span className="text-[10px] sm:text-sm md:text-xl w-full wrap-break-word text-center font-press-start-2p tracking-widest text-cyan-300 drop-shadow-md">
+                <span className="text-white">DEVS'26</span> - {team}
+              </span>
             )}
             {subtitle && (
               <span

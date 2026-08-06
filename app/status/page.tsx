@@ -100,7 +100,7 @@ function StatusContent() {
       <ResultCard
         title="Congratulations!"
         name={selectedParticipant?.name}
-        subtitle={selectedParticipant?.team}
+        team={selectedParticipant?.team}
         imageSrc="/red.webp"
         onGoBack={() => router.push("/")}
         onNext={() =>
