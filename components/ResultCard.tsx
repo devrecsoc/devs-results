@@ -43,18 +43,18 @@ export default function ResultCard({
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-cover bg-center bg-black font-sans w-full min-h-screen overflow-x-hidden">
       <main className="flex flex-1 w-full items-center justify-center p-4">
-        <div className="flex flex-col gap-6 items-center px-6 py-8 sm:p-10 rounded-2xl shadow-2xl max-w-md w-full animate-in fade-in zoom-in-95 duration-1000 ease-out fill-mode-both">
+        <div className="flex flex-col gap-2 items-center px-6 py-8 sm:p-10 rounded-2xl shadow-2xl max-w-full w-full animate-in fade-in zoom-in-95 duration-1000 ease-out fill-mode-both">
           <h1
-            className={`w-full max-w-full overflow-x-auto whitespace-nowrap text-center font-press-start-2p font-extrabold tracking-tight drop-shadow-md ${
-              titleClassName ?? "text-lg sm:text-2xl md:text-3xl text-blue-500"
+            className={`w-full max-w-full sm:text-xl md:text-2xl lg:text-4xl xl:text-5xl overflow-hidden whitespace-nowrap text-center font-press-start-2p font-extrabold tracking-tight drop-shadow-md ${
+              titleClassName ?? "text-blue-500"
             }`}
           >
             {title}
           </h1>
-          <div className="flex flex-col items-center gap-4 mt-3">
+          <div className="flex flex-col items-center gap-2 mt-3">
             {name && (
-              <h2 className="w-full max-w-full overflow-x-auto whitespace-nowrap text-[11px] sm:text-base md:text-xl text-center font-press-start-2p font-semibold tracking-tight text-white drop-shadow-md">
-                {name} {role && `- ${role}`}
+              <h2 className="w-full text-yellow-200 flex flex-col gap-2 overflow-x-hidden sm:text-base text-md text-center font-press-start-2p font-semibold tracking-tight drop-shadow-md">
+                {name} <span className="text-green-300">{role && `${role}`}</span>
               </h2>
             )}
             {subtitle && (
