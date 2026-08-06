@@ -15,8 +15,8 @@ type Member = {
 type ApiMember = Member & { team: string };
 
 const TEAM_NAMES: Record<string, string> = {
-  tech: "TECH TEAM",
   management: "MANAGEMENT",
+  tech: "TECH TEAM",
   pr: "PR TEAM",
   content: "CONTENT TEAM",
   design: "DESIGN TEAM",
@@ -27,14 +27,14 @@ const TEAM_NAMES: Record<string, string> = {
 
 // Cycling order for the ◀ / ▶ title navigation.
 const TEAM_ORDER = [
-  "tech",
   "management",
+  "tech",
   "pr",
-  "content",
+  "event",
   "design",
   "visuals",
   "video",
-  "event",
+  "content",
 ];
 
 // Only the tech folder has crewmate artwork today. Reuse it for every team
@@ -46,8 +46,8 @@ const AVATAR_ART_SLUG = "tech";
 const AVATARS_PER_TEAM = 10;
 
 const TEAM_SLUGS: Record<string, string> = {
-  "tech team": "tech",
   management: "management",
+  "tech team": "tech",
   "pr team": "pr",
   "content team": "content",
   "design team": "design",
@@ -129,7 +129,8 @@ export default function TeamLobby() {
             : ownParticipant.ok
               ? await ownParticipant.json()
               : null;
-          if (matchingMember?.team) selectedSlug = slugForTeam(matchingMember.team);
+          if (matchingMember?.team)
+            selectedSlug = slugForTeam(matchingMember.team);
         }
 
         if (!cancelled) {
@@ -155,8 +156,7 @@ export default function TeamLobby() {
         .filter((member) => slugForTeam(member.team) === slug)
         .sort(
           (a, b) =>
-            Number(b.isCore) - Number(a.isCore) ||
-            a.name.localeCompare(b.name),
+            Number(b.isCore) - Number(a.isCore) || a.name.localeCompare(b.name),
         )
         .map(({ email, name, regno, role, isCore }) => ({
           email,
