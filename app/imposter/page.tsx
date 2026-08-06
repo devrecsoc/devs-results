@@ -74,7 +74,7 @@ function ImposterContent() {
   return (
     <ResultCard
       title="IMPOSTER"
-      titleClassName="text-4xl md:text-5xl text-red-600"
+      titleClassName="text-red-600"
       name={member.name}
       role={member.role}
       subtitle="You belong to DEVS core"
