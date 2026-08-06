@@ -65,12 +65,12 @@ function StatusContent() {
 
   useEffect(() => {
     if (isLoading) return;
-    const audioConsent = sessionStorage.getItem("audioConsent");
-    if (audioConsent === "true") {
-      const audio = new Audio(isSelected ? "/selected.mp3" : "/rejected.mp3");
-      audio.volume = 0.6;
-      audio.play().catch((err) => console.error("Audio play failed:", err));
-    }
+
+    const audio = new Audio(isSelected ? "/selected.mp3" : "/rejected.mp3");
+    audio.volume = 0.6;
+    audio.play().catch((error) => {
+      console.error("Audio play failed:", error);
+    });
   }, [isLoading, isSelected]);
 
   useEffect(() => {

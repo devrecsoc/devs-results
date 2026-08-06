@@ -18,31 +18,30 @@ export default function Home() {
   const isValidEmail = email.trim() !== "" && /\S+@\S+\.\S+/.test(email);
 
   useEffect(() => {
-    // #TODO: FIX NEEDED
-    // Tried showing consent form popup only on reload but 
-    // also pops up on coming back from any other page.
-    // Needs fix if possible.
-    const navigation = performance.getEntriesByType(
-      "navigation",
-    )[0] as PerformanceNavigationTiming;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    if (
-      navigation &&
-      (navigation.type === "reload" || navigation.type === "navigate")
-    ) {
-      setShowConsent(true);
-    } else {
-      setShowConsent(false);
-    }
+    audio
+      .play()
+      .then(() => setAudioConsent(true))
+      .catch(() => {
+        setAudioConsent(false);
+        setShowConsent(true);
+      });
   }, []);
 
-  const handleConsent = (allow: boolean) => {
-    sessionStorage.setItem("audioConsent", allow ? "true" : "false");
+  const handleAudioInteraction = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
     setShowConsent(false);
-    setAudioConsent(allow);
-    if (allow) {
-      audioRef.current?.play().catch((e) => console.error(e));
-    }
+    audio
+      .play()
+      .then(() => setAudioConsent(true))
+      .catch(() => {
+        setAudioConsent(false);
+        setShowConsent(true);
+      });
   };
 
   const toggleMute = () => {
@@ -69,27 +68,21 @@ export default function Home() {
     <div className="relative flex flex-col flex-1 items-center justify-center min-h-screen bg-black font-sans overflow-hidden">
       <Toaster toast={toast} onClose={() => setToast(null)} />
       {showConsent && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-auto">
-          <div className="bg-[#576067] p-8 rounded-2xl shadow-2xl border-4 border-[#2f3133] flex flex-col items-center gap-8 max-w-sm animate-in zoom-in-95 duration-500 mx-4">
-            <h2 className="text-white font-press-start-2p text-center leading-loose text-xs md:text-sm drop-shadow-md">
-              Enable Sound Effects?
-            </h2>
-            <div className="flex gap-4 w-full">
-              <button
-                onClick={() => handleConsent(true)}
-                className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 text-white font-press-start-2p text-xs rounded-lg border-2 border-green-400 transition-colors shadow-lg active:scale-95"
-              >
-                YES
-              </button>
-              <button
-                onClick={() => handleConsent(false)}
-                className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 text-white font-press-start-2p text-xs rounded-lg border-2 border-red-400 transition-colors shadow-lg active:scale-95"
-              >
-                NO
-              </button>
-            </div>
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={handleAudioInteraction}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-auto"
+          aria-label="Enable sound effects"
+        >
+          <span className="bg-[#576067] p-8 rounded-2xl shadow-2xl border-4 border-[#2f3133] flex flex-col items-center gap-8 max-w-sm animate-in zoom-in-95 duration-500 mx-4">
+            <span className="text-white font-press-start-2p text-center leading-loose text-xs md:text-sm">
+              Click to enable sound effects
+            </span>
+            <span className="px-4 py-3 bg-green-600 hover:bg-green-500 text-white font-press-start-2p text-xs rounded-lg border-2 border-green-400 transition-colors shadow-lg active:scale-95">
+              ENABLE SOUND
+            </span>
+          </span>
+        </button>
       )}
       <style>{`
         @keyframes subtle-shake {
