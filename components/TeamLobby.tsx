@@ -197,7 +197,7 @@ export default function TeamLobby() {
         }
       `}</style>
       <Image
-        src="/team-bg.webp"
+        src="/lobby.webp"
         alt="Among Us style team lobby"
         fill
         priority
