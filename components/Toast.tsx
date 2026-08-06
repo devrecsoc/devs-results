@@ -26,6 +26,11 @@ export function Toaster({
 }) {
   const [mounted, setMounted] = useState(false);
 
+  // Standard client-mount detection for createPortal (needs `document`,
+  // unavailable during SSR). Flipping this in a setState-based effect —
+  // rather than deriving it at render time — is what keeps the server and
+  // first client render matching, avoiding a hydration mismatch.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {

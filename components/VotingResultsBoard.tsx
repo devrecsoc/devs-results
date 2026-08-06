@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Flag, Megaphone } from "lucide-react";
 
 export type SelectedStudent = {
-  email: string;
   name: string;
   team: string;
   regno: string;
@@ -12,7 +11,6 @@ export type SelectedStudent = {
 };
 
 export type CoreLead = {
-  email: string;
   name: string;
   regno: string;
   team: string;
@@ -175,19 +173,21 @@ export default function VotingResultsBoard({
             <div className="grid grid-cols-1 gap-2.5 pb-3 sm:grid-cols-2">
               {teamLeads.map((lead) => (
                 <div
-                  key={lead.email}
-                  className="flex items-center gap-3 rounded-lg bg-white px-3 py-2 shadow-sm ring-2 ring-red-600"
+                  key={lead.regno}
+                  className="flex flex-col gap-2 rounded-lg bg-white px-3 py-2 shadow-sm ring-2 ring-red-600 sm:flex-row sm:items-center sm:gap-3"
                 >
-                  <CrewmateAvatar color={CORE_AVATAR_COLOR} />
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate text-base font-extrabold text-black">
-                      {lead.name}
-                    </p>
-                    <p className="truncate text-xs font-semibold text-zinc-700">
-                      {lead.regno}
-                    </p>
+                  <div className="flex min-w-0 items-center gap-3">
+                    <CrewmateAvatar color={CORE_AVATAR_COLOR} />
+                    <div className="min-w-0 flex-1">
+                      <p className="wrap-break-word text-base font-extrabold text-black">
+                        {lead.name}
+                      </p>
+                      <p className="truncate text-xs font-semibold text-zinc-700">
+                        {lead.regno}
+                      </p>
+                    </div>
                   </div>
-                  <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white bg-red-600">
+                  <span className="self-start rounded-full px-2 py-0.5 text-[10px] font-bold text-white bg-red-600 sm:shrink-0 sm:self-auto">
                     {lead.role}
                   </span>
                 </div>
@@ -197,29 +197,33 @@ export default function VotingResultsBoard({
                 const color = colorForTeam(student.team);
                 return (
                   <div
-                    key={student.email}
-                    className="flex items-center gap-3 rounded-lg bg-white px-3 py-2 shadow-sm"
+                    key={student.regno}
+                    className="flex flex-col gap-2 rounded-lg bg-white px-3 py-2 shadow-sm sm:flex-row sm:items-center sm:gap-3"
                   >
-                    <CrewmateAvatar color={color} />
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate text-base font-extrabold text-black">
-                        {student.name}
-                      </p>
-                      <p className="truncate text-xs font-semibold text-zinc-700">
-                        {student.regno}
-                      </p>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <CrewmateAvatar color={color} />
+                      <div className="min-w-0 flex-1">
+                        <p className="wrap-break-word text-base font-extrabold text-black">
+                          {student.name}
+                        </p>
+                        <p className="truncate text-xs font-semibold text-zinc-700">
+                          {student.regno}
+                        </p>
+                      </div>
                     </div>
-                    <span
-                      className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                      style={{ background: color }}
-                    >
-                      {student.team}
-                    </span>
-                    {student.role && (
-                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold text-white bg-amber-800">
-                        {student.role}
+                    <div className="flex flex-col items-start gap-1 sm:shrink-0 sm:flex-row sm:items-center sm:gap-2">
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                        style={{ background: color }}
+                      >
+                        {student.team}
                       </span>
-                    )}
+                      {student.role && (
+                        <span className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white bg-amber-800">
+                          {student.role}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

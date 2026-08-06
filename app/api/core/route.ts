@@ -25,7 +25,16 @@ export async function GET(request: NextRequest) {
             return NextResponse.json(member);
         }
 
-        return NextResponse.json(members);
+        // Listing mode is used to render public rosters (team lobby,
+        // results board) — strip email so it never leaves the server for
+        // every core member, only for the one a caller explicitly asks for.
+        const publicMembers = members.map((m) => ({
+            name: m.name,
+            regno: m.regno,
+            team: m.team,
+            role: m.role,
+        }));
+        return NextResponse.json(publicMembers);
     } catch (err) {
         console.error(err);
 

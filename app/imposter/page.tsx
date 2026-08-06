@@ -74,7 +74,7 @@ function ImposterContent() {
   return (
     <ResultCard
       title="IMPOSTER"
-      titleClassName="text-4xl md:text-5xl text-red-600"
+      titleClassName="text-red-600"
       name={member.name}
       role={member.role}
       subtitle="You belong to DEVS core"
@@ -90,7 +90,7 @@ function ImposterContent() {
       noteContent={
         <>
           <p className="text-center text-2xl mb-3">🔪🕵️🔪</p>
-          <p className="text-xs md:text-sm font-press-start-2p text-red-100 leading-loose">
+          <p className="text-[10px] sm:text-xs md:text-sm font-press-start-2p text-red-100 leading-loose">
             Busted, {member.name}. DEVS Tech team built an entire
             &quot;selection results&quot; page just to catch core members
             snooping their own portal for imposters among the imposters. Anyway,

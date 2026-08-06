@@ -150,6 +150,10 @@ const TextType = ({
   const shouldHideCursor =
     hideCursorWhileTyping && (currentCharIndex < textArray[currentTextIndex].length || isDeleting);
 
+  // Component defaults to 'div' (a host element) and no caller in this
+  // repo overrides `as`, so this ref always lands on a DOM node — safe
+  // despite the lint rule's static, component-agnostic warning.
+  /* eslint-disable react-hooks/refs */
   return createElement(
     Component,
     {
@@ -169,6 +173,7 @@ const TextType = ({
       </span>
     )
   );
+  /* eslint-enable react-hooks/refs */
 };
 
 export default TextType;
