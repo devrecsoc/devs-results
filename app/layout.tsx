@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono , Press_Start_2P} from "next/font/google";
+import { Geist, Geist_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import Preloader from "@/components/Preloader";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 const pressStart2P = Press_Start_2P({
-  weight:"400",
+  weight: "400",
   variable: "--font-press-start-2p",
   subsets: ["latin"],
 });
@@ -37,6 +38,7 @@ export default function RootLayout({
         <Preloader />
         {children}
       </body>
+      <Analytics />
     </html>
   );
 }
