@@ -48,6 +48,10 @@ export async function captureElement(element: HTMLElement): Promise<Blob | null>
       backgroundColor: "transparent",
       pixelRatio:
         typeof window !== "undefined" ? Math.max(window.devicePixelRatio, 1) : 1,
+      // Controls remain available in the live page but should not appear in the
+      // final shared image.
+      filter: (node) =>
+        !(node instanceof HTMLElement && node.dataset.captureIgnore === "true"),
       // The live card animates in, but the exported image should represent its
       // settled state and must not rasterize an intermediate transform/filter.
       style: {

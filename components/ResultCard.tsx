@@ -105,7 +105,10 @@ export default function ResultCard({
               className="relative z-10"
             />
           </div>
-          <div className="mt-4 flex flex-col flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <div
+            data-capture-ignore="true"
+            className="mt-4 flex flex-col flex-wrap items-center justify-center gap-3 sm:gap-4"
+          >
             <div className="flex flex-wrap gap-2 sm:gap-4 justify-center">
               <button
                 onClick={onGoBack}
@@ -147,6 +150,7 @@ export default function ResultCard({
 
       {showNote && (
         <div
+          data-capture-ignore="true"
           className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-300 p-4"
           onClick={() => onToggleNote(false)}
         >
