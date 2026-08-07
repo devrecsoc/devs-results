@@ -66,7 +66,7 @@ function normalize(value: string) {
 function avatarIndexFor(member: Member) {
   const key = member.email ?? member.name;
   if (member.regno === "241501014") {
-    return 6;
+    return 7;
   }
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
