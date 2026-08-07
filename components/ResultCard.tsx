@@ -49,6 +49,10 @@ export default function ResultCard({
   noteBorderClassName,
   noteContent,
 }: ResultCardProps) {
+  const glowColor = glowClassName?.includes("red")
+    ? "rgba(220, 38, 38, 0.8)"
+    : "rgba(103, 232, 249, 0.8)";
+
   return (
     <div
       ref={ref}
@@ -87,16 +91,18 @@ export default function ResultCard({
           </div>
           <div className="relative m-6 flex items-center justify-center">
             <div
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-32 w-[90vw] max-w-[1000px] bg-gradient-to-r from-transparent to-transparent blur-2xl z-0 ${
-                glowClassName ?? "via-cyan-300/80"
-              }`}
+              aria-hidden="true"
+              className="absolute top-1/2 left-1/2 z-0 h-32 w-[90vw] max-w-[1000px] -translate-x-1/2 -translate-y-1/2"
+              style={{
+                background: `radial-gradient(ellipse at center, ${glowColor} 0%, ${glowColor.replace("0.8", "0.35")} 32%, transparent 72%)`,
+              }}
             />
             <Image
               src={imageSrc}
               alt="character"
               width={200}
               height={200}
-              className="relative z-10 drop-shadow-2xl"
+              className="relative z-10"
             />
           </div>
           <div className="mt-4 flex flex-col flex-wrap items-center justify-center gap-3 sm:gap-4">

@@ -43,6 +43,19 @@ export async function captureElement(element: HTMLElement): Promise<Blob | null>
     const blob = await toBlob(element, {
       cacheBust: true,
       quality: 1,
+      // Keep transparent assets transparent in the exported PNG instead of
+      // letting the renderer fill their canvas with black.
+      backgroundColor: "transparent",
+      pixelRatio:
+        typeof window !== "undefined" ? Math.max(window.devicePixelRatio, 1) : 1,
+      // The live card animates in, but the exported image should represent its
+      // settled state and must not rasterize an intermediate transform/filter.
+      style: {
+        animation: "none",
+        transition: "none",
+        transform: "none",
+        opacity: "1",
+      },
     });
 
     return blob;

@@ -124,7 +124,7 @@ function StatusContent() {
         title="Congratulations!"
         name={selectedParticipant?.name}
         team={selectedParticipant?.team}
-        imageSrc="/red.webp"
+        imageSrc="/red.png"
         onGoBack={() => router.push("/")}
         onNext={() =>
           router.push(
@@ -201,7 +201,7 @@ function StatusContent() {
       {/* Floating Character */}
       <div className="absolute top-1/2 left-1/2 w-32 h-32 animate-eject z-0 pointer-events-none">
         <Image
-          src="/red.webp"
+          src="/red.png"
           alt="Ejected Character"
           width={128}
           height={128}

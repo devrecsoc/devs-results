@@ -79,7 +79,7 @@ function ImposterContent() {
       role={member.role}
       subtitle="You belong to DEVS core"
       subtitleClassName="text-red-400"
-      imageSrc="/red.webp"
+      imageSrc="/red.png"
       glowClassName="via-red-600/80"
       onGoBack={() => router.push("/")}
       showNote={showNote}
