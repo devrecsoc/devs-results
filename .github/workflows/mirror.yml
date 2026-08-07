@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Mirror clone and push (no marketplace actions)
+      - name: Mirror repository
         env:
           SOURCE_REPO: ${{ github.repository }}
           TARGET_REPO: devrecsoc/devs-results
@@ -18,14 +18,16 @@ jobs:
           TARGET_TOKEN: ${{ secrets.DEVS_PAT }}
         run: |
           set -euo pipefail
+
           echo "git version: $(git --version)"
 
-          # Clone all refs and history from the source repo
-          git clone --mirror https://x-access-token:${SOURCE_TOKEN}@github.com/${SOURCE_REPO} repo.git
+          git clone --bare https://x-access-token:${SOURCE_TOKEN}@github.com/${SOURCE_REPO}.git repo.git
           cd repo.git
 
-          # Set push URL to target (use DEVS_PAT which must have write access)
-          git remote set-url --push origin https://x-access-token:${TARGET_TOKEN}@github.com/${TARGET_REPO}
+          git remote add target https://x-access-token:${TARGET_TOKEN}@github.com/${TARGET_REPO}.git
 
-          # Push everything (branches, tags, refs)
-          git push --mirror origin
+          # Push branches
+          git push --prune target 'refs/heads/*:refs/heads/*'
+
+          # Push tags
+          git push target --tags
